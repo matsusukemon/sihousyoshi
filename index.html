@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>買取再販 実践マニュアル</title>
+<meta name="theme-color" content="#1f5fbf">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="買取再販">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f6f7f9;--panel:#ffffff;--panel2:#f1f3f6;--line:#dde1e7;--text:#1d2430;--muted:#5d6878;
+  --accent:#1f5fbf;--accent-soft:#e6eefb;--ok:#1f8a4c;--ok-soft:#e3f4ea;--warn:#a86400;--warn-soft:#fbf0dc;
+  --ng:#c0392b;--ng-soft:#fbe5e2;--star:#d48a00;--shadow:0 1px 2px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171c;--panel:#1c2027;--panel2:#242a33;--line:#333b47;--text:#e6e9ee;--muted:#9aa4b2;
+    --accent:#6ea2f0;--accent-soft:#1f2c42;--ok:#4cc27e;--ok-soft:#183324;--warn:#e0a33c;--warn-soft:#3a2c14;
+    --ng:#ef6b5c;--ng-soft:#3d1d1a;--star:#f0b13c;--shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171c;--panel:#1c2027;--panel2:#242a33;--line:#333b47;--text:#e6e9ee;--muted:#9aa4b2;
+  --accent:#6ea2f0;--accent-soft:#1f2c42;--ok:#4cc27e;--ok-soft:#183324;--warn:#e0a33c;--warn-soft:#3a2c14;
+  --ng:#ef6b5c;--ng-soft:#3d1d1a;--star:#f0b13c;--shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;font-size:14px;line-height:1.65}
+a{color:var(--accent)}
+header{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;padding:10px 16px;flex-wrap:wrap}
+header h1{font-size:16px;margin:0;white-space:nowrap}
+header .grow{flex:1}
+header .case-pick{display:flex;align-items:center;gap:6px;font-size:13px}
+header select{max-width:260px}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 54px)}
+nav{border-right:1px solid var(--line);background:var(--panel);padding:10px 8px 40px;position:sticky;top:54px;height:calc(100vh - 54px);overflow:auto}
+nav .grp{font-size:11px;color:var(--muted);margin:14px 8px 4px;font-weight:600;letter-spacing:.04em}
+nav a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:13px}
+nav a:hover{background:var(--panel2)}
+nav a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav a .n{color:var(--muted);font-size:11px;min-width:18px;text-align:right}
+nav a.on .n{color:var(--accent)}
+nav a .st{color:var(--star)}
+#navSel{display:none}
+main{padding:20px 24px 80px;max-width:1180px;width:100%}
+h2{font-size:20px;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 16px}
+h3{font-size:15px;margin:20px 0 8px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+label.f{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+label.f>span.hint{font-size:11px}
+input,select,textarea{font:inherit;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 8px;min-width:0}
+input[type=number]{text-align:right}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+textarea{width:100%;min-height:70px;resize:vertical}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.unit{position:relative}
+.unit input{width:100%;padding-right:38px}
+.unit em{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-style:normal;font-size:11px;color:var(--muted);pointer-events:none}
+button,.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;padding:6px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+button:hover{background:var(--panel2)}
+button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+button.pri:hover{filter:brightness(1.08)}
+button.sm{padding:2px 8px;font-size:12px}
+button.del{color:var(--ng)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:middle}
+th{font-size:12px;color:var(--muted);font-weight:600;background:var(--panel2);white-space:nowrap}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--panel2)}
+tr.cur td{background:var(--accent-soft)}
+.tbl-wrap{overflow-x:auto}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--panel2);color:var(--muted);white-space:nowrap}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-warn{background:var(--warn-soft);color:var(--warn)}
+.b-ng{background:var(--ng-soft);color:var(--ng)}
+.b-acc{background:var(--accent-soft);color:var(--accent)}
+.notice{border-left:3px solid var(--accent);background:var(--accent-soft);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:14px;font-size:13px}
+.notice.warn{border-color:var(--warn);background:var(--warn-soft)}
+.phase{border-left:4px solid var(--accent)}
+.phase h4{margin:0 0 6px;font-size:14px}
+.phase ul{margin:0;padding-left:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);text-decoration:none;color:var(--text);white-space:nowrap}
+.chip.star{border-color:var(--star);color:var(--star);font-weight:700}
+.arrow{color:var(--muted);font-size:12px}
+.flow-row{margin-bottom:10px}
+.check-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.check-item:last-child{border-bottom:0}
+.tri{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.tri button{border:0;border-radius:0;padding:3px 10px;font-size:12px;background:var(--panel)}
+.tri button+button{border-left:1px solid var(--line)}
+.tri button.on.ok{background:var(--ok);color:#fff}
+.tri button.on.fix{background:var(--warn);color:#fff}
+.tri button.on.ng{background:var(--ng);color:#fff}
+.check-item input.memo{grid-column:1/-1;font-size:12px;padding:4px 8px}
+.timeblock{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.timeblock:last-child{border-bottom:0}
+.timeblock .t{font-weight:700;font-variant-numeric:tabular-nums}
+.cb{display:flex;gap:8px;align-items:flex-start;padding:2px 0;cursor:pointer}
+.cb input{margin-top:4px}
+.cb.done span{color:var(--muted);text-decoration:line-through}
+.big{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kv{display:grid;grid-template-columns:1fr auto;gap:2px 12px;font-variant-numeric:tabular-nums}
+.kv .k{color:var(--muted)}
+.kv .v{text-align:right}
+.kv .minus::before{content:"− "}
+.kv hr{grid-column:1/-1;border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
+.result{border:2px solid var(--accent)}
+.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.stack div{height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.formula{font-size:13px;background:var(--panel2);border-radius:8px;padding:10px 12px;line-height:2}
+.formula b{color:var(--accent)}
+.funnel-row{display:grid;grid-template-columns:70px 1fr 120px;gap:10px;align-items:center;margin:8px 0}
+.funnel-bar{height:28px;background:var(--panel2);border-radius:6px;overflow:hidden;position:relative}
+.funnel-bar div{height:100%;background:var(--accent);opacity:.85}
+.funnel-bar span{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--text)}
+.prog{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden}
+.prog div{height:100%;background:var(--accent)}
+.prog div.done{background:var(--ok)}
+.verdict{font-size:28px;font-weight:800;padding:12px 16px;border-radius:10px;text-align:center}
+.v-GO{background:var(--ok-soft);color:var(--ok)}
+.v-HOLD{background:var(--warn-soft);color:var(--warn)}
+.v-NOGO{background:var(--ng-soft);color:var(--ng)}
+.v-none{background:var(--panel2);color:var(--muted)}
+.principle{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+.principle .num{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+.doc{background:#fff;color:#111;border:1px solid var(--line);padding:28px 32px;border-radius:6px;font-size:13px}
+.doc h3{text-align:center;font-size:20px;margin:0 0 16px;letter-spacing:.3em}
+.doc table td,.doc table th{border:1px solid #999;background:#fff;color:#111}
+.doc table th{width:28%}
+.stamp{display:flex;justify-content:flex-end;gap:0;margin-top:14px}
+.stamp div{width:72px;border:1px solid #999;text-align:center;font-size:11px}
+.stamp div span{display:block;height:56px;border-top:1px solid #999}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);padding:0;width:min(640px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+dialog form{padding:18px}
+dialog h3{margin:0 0 12px}
+.dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.gloss dt{font-weight:700;margin-top:10px}
+.gloss dd{margin:2px 0 0;color:var(--muted)}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr}
+  nav{display:none}
+  #navSel{display:block;width:100%}
+  main{padding:14px 16px 80px}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .grid5{grid-template-columns:repeat(2,1fr)}
+  .timeblock{grid-template-columns:1fr;gap:4px}
+  header select{max-width:100%}
+  header h1{white-space:normal;font-size:14px}
+  .doc{padding:16px}
+}
+@media print{
+  header,nav,#navSel,.no-print{display:none!important}
+  .layout{display:block}
+  main{padding:0;max-width:none}
+  body{background:#fff;color:#000}
+  .card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>区分マンション・アパート一室 買取再販 実践マニュアル</h1>
+  <div class="grow"></div>
+  <div class="case-pick no-print">
+    <span class="muted">対象案件</span>
+    <select id="caseSel"></select>
+    <button class="sm" id="btnNewCase">＋新規案件</button>
+  </div>
+  <div class="row no-print">
+    <button class="sm" id="btnExport" title="全データをJSONで保存">バックアップ</button>
+    <button class="sm" id="btnImport" title="JSONから復元">復元</button>
+    <input type="file" id="fileImport" accept="application/json" hidden>
+  </div>
+  <select id="navSel" class="no-print"></select>
+</header>
+<div class="layout">
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* ========== データ ========== */
+const KEY = 'kaitori-saihan-v1';
+const STATUSES = ['情報受領','一次選別通過','現地確認済','詳細査定中','買付提出','決裁承認','契約・決済済','商品化中','販売中','引渡完了','見送り'];
+const DROP = STATUSES.length - 1;
+const KPI_ITEMS = [
+  ['visit','仲介会社訪問数',80],['call','架電数',400],['info','情報提供数',100],
+  ['screen','一次選別数',30],['site','現地調査件数',10],['offer','買付提出数',3],['deal','仕入れ成立数',1]
+];
+const REFORM_ITEMS = [
+  ['kitchen','キッチン交換','式',60],['bath','ユニットバス交換','式',90],['toilet','トイレ交換','式',20],
+  ['wash','洗面化粧台交換','式',15],['boiler','給湯器交換','式',18],['cloth','クロス張替','㎡',0.12],
+  ['floor','フローリング張替','㎡',1.0],['cf','CF・フロアタイル張替','㎡',0.45],['door','建具交換','箇所',5],
+  ['fusuma','襖・障子張替','枚',0.6],['tatami','畳表替え','枚',0.6],['light','照明・設備機器交換','式',5],
+  ['elec','電気・配管工事','式',10],['clean','ハウスクリーニング','式',5],['junk','残置物撤去','式',10]
+];
+const SITE_ITEMS = {
+  '専有部':['雨漏り・漏水の痕跡（天井・壁のシミ）','水回りの状態（キッチン・浴室・トイレ・洗面）','床の傾き・きしみ','サッシ・建具の建付け','給湯器の年式・動作','残置物の有無・量','臭気・カビ・結露','分電盤・電気容量','バルコニーの状態'],
+  '共用部':['エントランスの清掃状況','ゴミ置き場の管理状態','掲示板の荒れ具合（注意喚起の多さ）','エレベーターの保守状況（点検記録）','外壁・廊下のひび割れ・汚れ','駐輪場・駐車場の整理状況','集合ポストの状態（チラシの溢れ）'],
+  '周辺環境':['最寄駅からの実歩行時間','嫌悪施設の有無','日当たり・眺望','騒音（道路・線路・近隣）','生活利便施設（スーパー・病院等）']
+};
+const MGMT_ITEMS = {
+  '重要事項調査報告書':['管理費の滞納状況（当該住戸・全体）','修繕積立金の滞納状況','修繕積立金の積立総額・1戸あたりの水準','大規模修繕の履歴','大規模修繕の予定・一時金徴収の有無','修繕積立金の値上げ予定','耐震診断の有無（旧耐震の場合）','管理形態（全部委託／一部委託／自主管理）','アスベスト調査の有無','管理費等の水準（周辺相場比）'],
+  '管理規約・使用細則':['ペット飼育の可否','事務所利用の可否','民泊・SOHO利用の制限','楽器演奏の制限','リフォーム工事規定（床材の遮音等級・届出）','専有部の工事可能範囲（配管・サッシ等）','総会議事録の懸案事項']
+};
+const PROD_STEPS = ['施工業者との打ち合わせ','見積確定・発注','着工','中間確認','完工検査・手直し','ハウスクリーニング','ステージング（家具配置）','販売用写真撮影'];
+const SALES_STEPS = ['販売図面の作成','販売価格の確定','ポータルサイト掲載','媒介会社への情報提供','オープンルーム実施','購入申込の受付','条件調整（価格・引渡時期）','売買契約締結','残代金決済・引渡し'];
+const NEGO_POINTS = ['残置物の撤去費用','雨漏り・設備不具合の修繕費','長期売出（売れ残り期間）','管理費・修繕積立金の滞納','修繕積立金の値上げ・一時金予定','現金・短期決済（スピードの価値）','契約不適合責任の免責','周辺成約事例との乖離'];
+
+function defaultSim(){
+  return {resale:0,reform:0,regFee:15,acqTax:8,buyBroker:true,months:6,mgmtMonthly:2.5,propTaxYear:8,otherHold:2,
+    loanPct:90,rate:3.0,sellBroker:true,ad:20,bufferPct:3,profitPct:10,profitMin:150};
+}
+function defaultState(){
+  const t={}; KPI_ITEMS.forEach(([k,,v])=>t[k]=v);
+  return {cases:[],channels:[],kpi:{},kpiTargets:t,daily:{},current:'',scratch:{name:'（試算モード）'},unit:{}};
+}
+function load(){
+  try{const r=localStorage.getItem(KEY); if(r) return Object.assign(defaultState(),JSON.parse(r));}catch(e){}
+  return defaultState();
+}
+let S = load();
+let saveTimer=null;
+function save(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast('保存できませんでした（ブラウザの保存領域を確認してください）');}},150); }
+
+function ctx(){ return S.cases.find(c=>c.id===S.current) || S.scratch; }
+function hasCase(){ return !!S.cases.find(c=>c.id===S.current); }
+function sim(c){ c=c||ctx(); c.sim=Object.assign(defaultSim(),c.sim||{}); return c.sim; }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function today(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function num(v){ const n=parseFloat(v); return isFinite(n)?n:0; }
+function dflt(v,d){ return (v===''||v==null)?d:num(v); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function man(v,d){ if(v==null||!isFinite(v)) return '—'; const p=d==null?1:d; return (Math.round(v*Math.pow(10,p))/Math.pow(10,p)).toLocaleString('ja-JP',{maximumFractionDigits:p})+'万円'; }
+function pct(v,d){ if(v==null||!isFinite(v)) return '—'; return (v*100).toFixed(d==null?1:d)+'%'; }
+function getP(o,p){ return p.split('.').reduce((a,k)=>a==null?undefined:a[k],o); }
+function setP(o,p,v){ const ks=p.split('.'); let a=o; ks.slice(0,-1).forEach(k=>{ if(a[k]==null||typeof a[k]!=='object') a[k]={}; a=a[k]; }); a[ks[ks.length-1]]=v; }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+
+/* ========== 計算ロジック ========== */
+// 仲介手数料（税込・万円）
+function brokerFee(p){
+  if(p<=0) return 0;
+  let f = p<=200 ? p*0.05 : p<=400 ? p*0.04+2 : p*0.03+6;
+  return f*1.1;
+}
+// 買取価格Pで仕入れた場合の各費用
+function costsAt(s,P,R){
+  R = R==null ? num(s.resale) : R;
+  const m=num(s.months);
+  const acq = num(s.regFee)+num(s.acqTax)+(s.buyBroker?brokerFee(P):0);
+  const interest = P*num(s.loanPct)/100*num(s.rate)/100*m/12;
+  const hold = m*num(s.mgmtMonthly)+num(s.propTaxYear)*m/12+num(s.otherHold)+interest;
+  const sales = (s.sellBroker?brokerFee(R):0)+num(s.ad);
+  const reform = num(s.reform);
+  const buffer = R*num(s.bufferPct)/100;
+  const target = Math.max(R*num(s.profitPct)/100,num(s.profitMin));
+  const invest = P+reform+acq+hold;
+  const profit = R-invest-sales;  // 安全余裕を使い切らなかった場合の見込利益
+  return {R,P,acq,interest,hold,sales,reform,buffer,target,invest,profit,loan:P*num(s.loanPct)/100};
+}
+function calcLimit(s){
+  const R=num(s.resale);
+  if(R<=0) return null;
+  let P=R*0.7;
+  for(let i=0;i<80;i++){
+    const c=costsAt(s,P,R);
+    const next=R-c.reform-c.acq-c.hold-c.sales-c.buffer-c.target;
+    if(Math.abs(next-P)<1e-6){P=next;break;}
+    P=next;
+  }
+  const c=costsAt(s,Math.max(P,0),R);
+  c.limit=P; return c;
+}
+function calcReform(c){
+  c=c||ctx(); const r=c.reform||{}; const q=r.qty||{};
+  let sub=0; REFORM_ITEMS.forEach(([k])=>{ sub+=num(q[k])*unitPrice(k); });
+  (r.extra||[]).forEach(x=>{ sub+=num(x.qty)*num(x.price); });
+  const misc=sub*dflt(r.miscPct,8)/100;
+  const cont=(sub+misc)*dflt(r.contPct,5)/100;
+  return {sub,misc,cont,total:sub+misc+cont};
+}
+function unitPrice(k){ const d=REFORM_ITEMS.find(x=>x[0]===k); return dflt(S.unit[k],d[3]); }
+function calcComps(c){
+  c=c||ctx(); const a=c.appr||{}; const rows=(a.rows||[]).filter(r=>num(r.price)>0&&num(r.area)>0);
+  if(!rows.length) return null;
+  const units=rows.map(r=>r.price/r.area*(1+num(r.adj)/100));
+  const avg=units.reduce((x,y)=>x+y,0)/units.length;
+  const adj=['floor','dir','view','plan','age'].reduce((x,k)=>x+num(a[k]),0);
+  const area=num(a.area||c.area);
+  const base=avg*area*(1+adj/100);
+  const safe=base*(1-dflt(a.safePct,5)/100);
+  return {n:rows.length,avg,adj,area,base,safe};
+}
+function siteCount(c){
+  const o={ok:0,fix:0,ng:0};
+  ['site','mgmt'].forEach(k=>{ const d=(c[k]||{}).st||{}; Object.values(d).forEach(v=>{ if(o[v]!=null) o[v]++; }); });
+  return o;
+}
+function judgeAuto(c){
+  const s=sim(c); const r=calcLimit(s); const a={};
+  const offer=num((c.offer||{}).price)||num(c.ask);
+  if(r && offer>0){
+    a.price = offer<=r.limit?'OK':offer<=r.limit*1.15?'HOLD':'NG';
+    const p=costsAt(s,offer).profit;
+    a.profit = p>=r.target?'OK':p>=r.target*0.5?'HOLD':'NG';
+  }
+  const sc=siteCount(c);
+  if(sc.ok+sc.fix+sc.ng>0) a.mgmt = sc.ng>0?'NG':sc.fix>0?'HOLD':'OK';
+  return a;
+}
+function judgeResult(j){
+  j=j||{}; const v=['price','mgmt','loc','profit'].map(k=>j[k]);
+  if(v.includes('NG')) return 'NO-GO';
+  if(v.some(x=>!x)) return '';
+  if(v.includes('HOLD')) return 'HOLD';
+  return 'GO';
+}
+function judgeBadge(r){ return r==='GO'?'<span class="badge b-ok">GO</span>':r==='HOLD'?'<span class="badge b-warn">HOLD</span>':r==='NO-GO'?'<span class="badge b-ng">NO-GO</span>':'<span class="badge">未判定</span>'; }
+
+/* ========== セクション定義 ========== */
+const GROUPS = ['1〜5 情報収集・ファネル管理','6〜10 物件調査・査定','11〜16 意思決定・実行・販売','17〜21 KPI・ルール・判定基準'];
+const SEC = [
+  [1,'全体ロードマップ',0],[2,'新人1日の行動表',0],[3,'情報獲得チャネル管理',0],[4,'物件案件管理',0],[5,'100→30→10→3→1選別',0],
+  [6,'区分マンション一次査定',1],[7,'現地確認チェックリスト',1],[8,'管理資料チェック項目',1],[9,'出口・賃貸需要',1],[10,'リフォーム査定',1],
+  [11,'買取価格シミュレーター',2],[12,'買付・価格交渉',2],[13,'仕入れ決裁',2],[14,'商品化工程',2],[15,'販売管理',2],[16,'利益確定',2],
+  [17,'仕入れKPI',3],[18,'新人用語集',3],[19,'新人5原則',3],[20,'GO / HOLD / NO-GO 判定',3],[21,'使い方',3]
+];
+const CIRC='①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑';
+function cn(i){ return CIRC[i-1]; }
+function link(i,label){ return `<a href="#/${i}">${cn(i)} ${esc(label||SEC[i-1][1])}</a>`; }
+
+let curSec=1;
+const R = {};  // render関数
+const F = {};  // 入力後の再計算関数
+
+function renderNav(){
+  let h='';
+  GROUPS.forEach((g,gi)=>{
+    h+=`<div class="grp">${g}</div>`;
+    SEC.filter(s=>s[2]===gi).forEach(([i,t])=>{ h+=`<a href="#/${i}" class="${i===curSec?'on':''}"><span class="n">${cn(i)}</span><span>${t}${i===11?' <span class="st">★</span>':''}</span></a>`; });
+  });
+  document.getElementById('nav').innerHTML=h;
+  document.getElementById('navSel').innerHTML=SEC.map(([i,t])=>`<option value="${i}" ${i===curSec?'selected':''}>${cn(i)} ${t}</option>`).join('');
+}
+function renderCaseSel(){
+  const sel=document.getElementById('caseSel');
+  sel.innerHTML=`<option value="">（案件未選択：試算モード）</option>`+S.cases.map(c=>`<option value="${c.id}" ${c.id===S.current?'selected':''}>${esc(c.name||'名称未設定')}　${esc(STATUSES[c.status||0])}</option>`).join('');
+}
+function render(){
+  const m=location.hash.match(/#\/(\d+)/); curSec=m?Math.min(21,Math.max(1,+m[1])):1;
+  renderNav(); renderCaseSel();
+  const [i,t]=SEC[curSec-1];
+  const main=document.getElementById('main');
+  main.innerHTML=`<h2>${cn(i)} ${t}</h2>`+R[i]();
+  bind(main);
+  if(F[i]) F[i]();
+  if(AFTER[i]) AFTER[i](main);
+}
+function rerender(){ const y=window.scrollY; render(); window.scrollTo(0,y); }
+
+function caseBanner(){
+  if(hasCase()) return `<div class="notice">対象案件：<b>${esc(ctx().name)}</b>　<span class="muted small">入力内容はこの案件に保存されます。</span></div>`;
+  return `<div class="notice warn">案件が未選択のため<b>試算モード</b>で動作しています。案件ごとに記録する場合は、上部の「対象案件」で選択するか ${link(4)} で登録してください。</div>`;
+}
+
+/* 入力バインド：data-k="path" は対象案件(ctx)、data-g="path" はグローバル(S) */
+function bind(root){
+  root.querySelectorAll('[data-k],[data-g]').forEach(el=>{
+    const g=el.hasAttribute('data-g'); const path=g?el.dataset.g:el.dataset.k; const base=()=>g?S:ctx();
+    const v=getP(base(),path);
+    if(el.type==='checkbox') el.checked = v==null ? el.defaultChecked : !!v;
+    else if(v!=null) el.value=v;
+    const ev = (el.dataset.re!=null||el.tagName==='SELECT'||el.type==='checkbox'||el.type==='date')?'change':'input';
+    el.addEventListener(ev,()=>{
+      let val = el.type==='checkbox'?el.checked : el.type==='number' ? (el.value===''?'':parseFloat(el.value)) : el.value;
+      setP(base(),path,val); save();
+      if(el.dataset.re!=null) rerender(); else if(F[curSec]) F[curSec]();
+    });
+  });
+  root.querySelectorAll('.tri').forEach(t=>{
+    const path=t.dataset.tri; const cur=getP(ctx(),path);
+    t.querySelectorAll('button').forEach(b=>{
+      if(b.dataset.v===cur) b.classList.add('on');
+      b.addEventListener('click',e=>{
+        e.preventDefault(); const nv = cur===b.dataset.v ? '' : b.dataset.v;
+        setP(ctx(),path,nv); save(); rerender();
+      });
+    });
+  });
+}
+function numIn(k,label,unit,hint,opt){
+  opt=opt||{};
+  return `<label class="f">${label}<span class="unit"><input type="number" step="${opt.step||'any'}" ${opt.g?'data-g':'data-k'}="${k}" ${opt.re?'data-re':''} inputmode="decimal"><em>${unit||''}</em></span>${hint?`<span class="hint">${hint}</span>`:''}</label>`;
+}
+function txtIn(k,label,ph,type){ return `<label class="f">${label}<input type="${type||'text'}" data-k="${k}" placeholder="${esc(ph||'')}"></label>`; }
+
+const AFTER = {};
+
+/* ① 全体ロードマップ */
+const PHASES = [
+  ['Phase 1','準備・情報獲得','チャネル開拓、情報収集、毎日追客',[2,3,4]],
+  ['Phase 2','一次選別・調査','5分選別、現地確認、管理資料チェック',[5,6,7,8]],
+  ['Phase 3','収支・買取決定','買取価格シミュレーター、出口・リフォーム査定',[9,10,11]],
+  ['Phase 4','交渉・仕入れ','買付証明書提出、価格交渉、契約決済',[12,13,20]],
+  ['Phase 5','商品化・販売・利益確定','リフォーム施工、販売管理、引渡し・振り返り',[14,15,16]]
+];
+R[1]=()=>{
+  const ph=PHASES.map(([p,t,d,ls])=>`<div class="card phase"><h4>${p}：${t}</h4><div class="muted small" style="margin-bottom:6px">${d}</div><div class="chips">${ls.map(i=>`<a class="chip ${i===11?'star':''}" href="#/${i}">${cn(i)} ${SEC[i-1][1]}</a>`).join('')}</div></div>`).join('');
+  const flow=[[1,2,3,4],[6,7,8,5],[9,10,11],[12,13,14,15,16],[17,18,19,20,21]];
+  const fl=flow.map((r,ri)=>`<div class="flow-row chips">${ri===4?'<span class="arrow">└ 共通ルール：</span>':''}${r.map(i=>`<a class="chip ${i===11?'star':''}" href="#/${i}">${cn(i)} ${SEC[i-1][1]}${i===11?' ★最重要':''}</a>`).join(ri===4?'<span class="arrow">｜</span>':'<span class="arrow">▶</span>')}</div>`).join('');
+  return `<p class="lead">仕入れから販売・利益確定までの一連の流れを5つのPhaseに体系化しています。各項目をクリックすると該当シートへ移動します。</p>
+  ${ph}<h3>全21項目の流れ</h3><div class="card">${fl}</div>`;
+};
+
+/* ② 新人1日の行動表 */
+const DAILY = [
+  ['09:00 - 10:00','情報確認',['メールの確認・返信','新着ポータル物件のチェック','仲介会社からの物件情報の確認・④へ登録']],
+  ['10:00 - 12:00','架電・訪問',['主要仲介会社への架電（未公開情報のヒアリング）','仲介会社への訪問','③チャネル管理の最終接触日を更新']],
+  ['13:00 - 15:00','現地調査',['気になった物件の現地調査','周辺環境チェック','⑦現地確認チェックリストの記入']],
+  ['15:00 - 17:00','資料確認・収支計算',['管理組合資料（重要事項調査報告書・管理規約）の確認','⑪買取価格シミュレーターで収支計算','⑳GO/HOLD/NO-GO判定']],
+  ['17:00 - 18:00','日報・翌日準備',['日報作成・上長へ報告','翌日のアポイント調整','タスク整理・⑰KPI実績入力']]
+];
+R[2]=()=>{
+  const d=S.daily[today()]||{}; const ck=d.ck||{};
+  let total=0,done=0;
+  const blocks=DAILY.map(([t,ttl,items],bi)=>`<div class="timeblock"><div><div class="t">${t}</div><div class="muted small">${ttl}</div></div><div>${items.map((it,ii)=>{const k=bi+'_'+ii; total++; if(ck[k]) done++; return `<label class="cb ${ck[k]?'done':''}"><input type="checkbox" data-g="daily.${today()}.ck.${k}" data-re><span>${esc(it)}</span></label>`;}).join('')}</div></div>`).join('');
+  return `<p class="lead">朝の新着チェックから夕方の日報まで、ルーティンを完全に固定化します。チェックは日付ごとに保存されます。</p>
+  <div class="card"><div class="row" style="justify-content:space-between"><b>${today()} のルーティン</b><span class="badge ${done===total?'b-ok':'b-acc'}">${done} / ${total} 完了</span></div>
+  <div class="prog" style="margin:8px 0 4px"><div class="${done===total?'done':''}" style="width:${total?done/total*100:0}%"></div></div>${blocks}</div>
+  <div class="card"><h3 style="margin-top:0">日報</h3>
+  <textarea data-g="daily.${today()}.report" style="min-height:140px" placeholder="【本日の行動】訪問○件／架電○件／情報受領○件&#10;【有望案件】&#10;【マイナス情報・相談事項】&#10;【明日の予定】"></textarea>
+  <div class="row" style="margin-top:8px"><button id="copyReport">日報をコピー</button><span class="muted small">マイナス情報は日報を待たず即共有（${link(19,'新人5原則')}）。</span></div></div>`;
+};
+AFTER[2]=m=>{
+  m.querySelector('#copyReport').onclick=()=>{
+    const r=((S.daily[today()]||{}).report)||'';
+    const txt=`日報 ${today()}\n`+r;
+    navigator.clipboard.writeText(txt).then(()=>toast('コピーしました'),()=>toast('コピーできませんでした'));
+  };
+};
+
+/* ③ 情報獲得チャネル管理 */
+const CH_TYPES=['地場仲介会社','大手仲介会社','ネット・ポータル'];
+const CH_DESC=['エリア密着型の業者への定期訪問と、独自の未公開情報ネットワーク構築','システム登録物件および担当者との太いパイプ作りによるスピード対応','各種不動産ポータルサイトの継続的なモニタリング'];
+function daysSince(d){ if(!d) return null; return Math.floor((new Date(today())-new Date(d))/86400000); }
+R[3]=()=>{
+  const sum=CH_TYPES.map((t,i)=>{const l=S.channels.filter(c=>c.type===t); return `<div class="card"><b>${t}</b><div class="big" style="font-size:24px">${l.length}<span class="small muted"> 社・件</span></div><div class="muted small">${CH_DESC[i]}</div><div class="small">情報提供 累計 ${l.reduce((a,c)=>a+num(c.info),0)} 件</div></div>`;}).join('');
+  const rows=S.channels.slice().sort((a,b)=>(a.last||'').localeCompare(b.last||'')).map(c=>{
+    const ds=daysSince(c.last); const late=ds==null||ds>=14;
+    return `<tr class="click" data-id="${c.id}"><td>${esc(c.type)}</td><td><b>${esc(c.name)}</b></td><td>${esc(c.person)}</td><td>${esc(c.tel)}</td><td><span class="badge ${c.rank==='A'?'b-ok':c.rank==='B'?'b-acc':''}">${esc(c.rank||'-')}</span></td><td class="r">${num(c.info)}</td><td>${esc(c.last||'未接触')} ${late?'<span class="badge b-warn">要追客</span>':''}</td><td class="no-print"><button class="sm" data-touch="${c.id}">本日接触</button> <button class="sm" data-plus="${c.id}">情報+1</button></td></tr>`;
+  }).join('');
+  return `<p class="lead">地場仲介・大手仲介・ネットポータルの開拓状況をリスト化します。最終接触から14日以上経過したチャネルは「要追客」と表示されます。</p>
+  <div class="grid3">${sum}</div>
+  <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:8px"><b>チャネル一覧</b><button class="pri" id="addCh">＋ チャネル追加</button></div>
+  <div class="tbl-wrap">${S.channels.length?`<table><thead><tr><th>種別</th><th>会社・サイト名</th><th>担当者</th><th>連絡先</th><th>ランク</th><th class="r">情報提供数</th><th>最終接触日</th><th></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">まだ登録がありません。主要な仲介会社・ポータルから登録しましょう。</div>'}</div></div>`;
+};
+const CH_FIELDS=[['type','種別','select',CH_TYPES],['name','会社・サイト名'],['person','担当者'],['tel','連絡先'],['rank','ランク','select',['A','B','C']],['info','情報提供数','number'],['last','最終接触日','date'],['memo','メモ','textarea']];
+AFTER[3]=m=>{
+  m.querySelector('#addCh').onclick=()=>openForm('チャネル追加',CH_FIELDS,{type:CH_TYPES[0],rank:'B',info:0},o=>{o.id=uid();S.channels.push(o);});
+  m.querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=e=>{
+    if(e.target.closest('button')) return;
+    const c=S.channels.find(x=>x.id===tr.dataset.id);
+    openForm('チャネル編集',CH_FIELDS,c,o=>Object.assign(c,o),()=>{S.channels=S.channels.filter(x=>x!==c);});
+  });
+  m.querySelectorAll('[data-touch]').forEach(b=>b.onclick=()=>{S.channels.find(x=>x.id===b.dataset.touch).last=today();save();rerender();});
+  m.querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>{const c=S.channels.find(x=>x.id===b.dataset.plus);c.info=num(c.info)+1;c.last=today();save();rerender();});
+};
+
+/* ④ 物件案件管理 */
+const CASE_FIELDS=[['name','物件名'],['addr','所在地'],['type','種別','select',['区分マンション','アパート一室']],['struct','構造','select',['RC','SRC','S（鉄骨）','木造','軽量鉄骨','その他']],['built','築年（西暦）','number'],['area','専有面積（㎡）','number'],['plan','間取り'],['floor','所在階','number'],['ask','売出価格（万円）','number'],['sim.resale','想定再販価格（万円）','number'],['status','ステータス','select',STATUSES.map((s,i)=>[i,s])],['source','情報元（チャネル）'],['recv','情報受領日','date'],['memo','メモ','textarea']];
+function newCase(){
+  openForm('新規案件登録',CASE_FIELDS,{type:'区分マンション',struct:'RC',status:0,recv:today()},o=>{
+    const c={}; Object.keys(o).forEach(k=>setP(c,k,o[k]));
+    c.id=uid(); c.maxStage=num(c.status)===DROP?0:num(c.status); S.cases.unshift(c); S.current=c.id;
+  });
+}
+R[4]=()=>{
+  const flt=S.caseFilter||'';
+  const list=S.cases.filter(c=>flt===''||String(c.status||0)===flt);
+  const rows=list.map(c=>{
+    const r=calcLimit(sim(c)); const age=c.built?new Date().getFullYear()-num(c.built):null;
+    const st=num(c.status); const late = st<4 && daysSince(c.recv)>7;
+    return `<tr class="click ${c.id===S.current?'cur':''}" data-id="${c.id}"><td><b>${esc(c.name||'名称未設定')}</b><div class="muted small">${esc(c.type||'')}</div></td><td>${esc(c.addr)}</td><td>${esc(c.struct||'')}${age!=null?` / 築${age}年`:''}</td><td class="r">${c.area?num(c.area)+'㎡':'—'}</td><td class="r">${c.ask?man(num(c.ask),0):'—'}</td><td class="r">${num(c.sim.resale)?man(num(c.sim.resale),0):'—'}</td><td class="r">${r?man(r.limit,0):'—'}</td><td><span class="badge ${st===DROP?'b-ng':st>=6?'b-ok':st>=4?'b-acc':''}">${STATUSES[st]}</span>${late?' <span class="badge b-warn">停滞</span>':''}</td><td>${judgeBadge((c.judge||{}).result)}</td><td class="no-print"><button class="sm" data-edit="${c.id}">編集</button></td></tr>`;
+  }).join('');
+  return `<p class="lead">すべての流入案件を一覧化し、ステータス遅れや取りこぼしを防ぎます。行をクリックすると対象案件に設定され、⑥〜⑯・⑳のシートにその案件のデータが記録されます。買付前の段階で受領から7日以上経過した案件は「停滞」と表示されます。</p>
+  <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:8px">
+  <div class="row"><b>案件一覧</b><select id="flt"><option value="">すべて（${S.cases.length}）</option>${STATUSES.map((s,i)=>`<option value="${i}" ${flt===String(i)?'selected':''}>${s}（${S.cases.filter(c=>num(c.status)===i).length}）</option>`).join('')}</select></div>
+  <button class="pri" id="addCase">＋ 案件追加</button></div>
+  <div class="tbl-wrap">${list.length?`<table><thead><tr><th>物件名</th><th>所在地</th><th>構造・築年数</th><th class="r">専有面積</th><th class="r">売値</th><th class="r">想定再販</th><th class="r">買取上限</th><th>ステータス</th><th>判定</th><th></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">案件がありません。「＋ 案件追加」から登録してください。</div>'}</div></div>`;
+};
+AFTER[4]=m=>{
+  m.querySelector('#addCase').onclick=newCase;
+  m.querySelector('#flt').onchange=e=>{S.caseFilter=e.target.value;save();rerender();};
+  m.querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=e=>{
+    if(e.target.closest('button')) return;
+    S.current = S.current===tr.dataset.id ? '' : tr.dataset.id; save(); rerender();
+  });
+  m.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{
+    const c=S.cases.find(x=>x.id===b.dataset.edit);
+    openForm('案件編集',CASE_FIELDS,c,o=>{
+      Object.keys(o).forEach(k=>setP(c,k,o[k])); c.maxStage=Math.max(num(c.maxStage), num(c.status)===DROP?0:num(c.status));
+    },()=>{S.cases=S.cases.filter(x=>x!==c); if(S.current===c.id) S.current='';});
+  });
+};
+
+/* ⑤ 選別ファネル */
+R[5]=()=>{
+  const all=S.cases.length; const reach=n=>S.cases.filter(c=>Math.max(num(c.maxStage),num(c.status)===DROP?0:num(c.status))>=n).length;
+  const lv=[[100,'広く情報をインプットする一次母集団',all],[30,'立地・大まかな価格帯・築年数で残すスクリーニング',reach(1)],[10,'管理資料・現地確認を経て詳細査定を行う案件',reach(2)],[3,'収支計算が合い、買付を検討する厳選案件',reach(4)],[1,'最終決裁を経て買い付ける勝負案件',reach(5)]];
+  const rows=lv.map(([n,d,c],i)=>{
+    const prev=i?lv[i-1][2]:null; const rate=prev?c/prev:null; const ideal=i?n/lv[i-1][0]:null;
+    return `<div class="funnel-row"><div><b>${n}件</b></div><div><div class="funnel-bar"><div style="width:${all?Math.max(c/all*100,c?2:0):0}%"></div><span>${c}件</span></div><div class="muted small">${d}</div></div><div class="small r">${rate!=null?`歩留まり <b>${pct(rate,0)}</b><br><span class="muted">目安 ${pct(ideal,0)}</span>`:''}</div></div>`;
+  }).join('');
+  return `<p class="lead">インプット100件から勝負物件1件に至るまでのファネル歩留まりを管理します。件数は ${link(4)} のステータス（到達した最高段階）から自動集計されます。</p>
+  <div class="card">${rows}</div>
+  <div class="card"><h3 style="margin-top:0">各段階の判断ポイント</h3><table><tbody>
+  <tr><th>100→30</th><td>5分選別：立地（駅距離）・売値の㎡単価・築年数・構造で機械的にふるい落とす。迷ったら残す。</td></tr>
+  <tr><th>30→10</th><td>${link(6)}で再販価格の当たりを付け、${link(7)}・${link(8)}を実施。重大懸念があれば即見送り。</td></tr>
+  <tr><th>10→3</th><td>${link(9)}・${link(10)}を踏まえ ${link(11)} で買取上限価格を算出。売値との差が指値で埋まる案件のみ残す。</td></tr>
+  <tr><th>3→1</th><td>${link(20)} でGO判定 → ${link(12)} → ${link(13)}。</td></tr></tbody></table></div>`;
+};
+
+/* ⑥ 一次査定 */
+R[6]=()=>{
+  const c=ctx(); c.appr=c.appr||{}; if(!c.appr.rows) c.appr.rows=[{},{},{}];
+  const rows=c.appr.rows.map((r,i)=>`<tr><td><input data-k="appr.rows.${i}.name" placeholder="〇〇マンション 5F"></td><td><input type="number" data-k="appr.rows.${i}.price" style="width:90px"></td><td><input type="number" data-k="appr.rows.${i}.area" style="width:70px"></td><td class="r" id="u${i}">—</td><td><input type="number" data-k="appr.rows.${i}.adj" style="width:64px" placeholder="0"></td><td><input data-k="appr.rows.${i}.memo" placeholder="成約時期・階・方角など"></td><td class="no-print"><button class="sm del" data-rm="${i}">×</button></td></tr>`).join('');
+  return `<p class="lead">周辺の類似成約事例（レインズ・ポータルサイト等）をもとに、階数・方角・眺望・間取りを考慮して素早くベースの再販価格を算出します。</p>${caseBanner()}
+  <div class="card"><b>類似成約事例</b> <span class="muted small">（価格：万円／面積：㎡／事例補正：対象物件と比べた事例の時点・築年等の補正%）</span>
+  <div class="tbl-wrap"><table style="margin-top:8px"><thead><tr><th>事例名</th><th>成約価格</th><th>面積</th><th class="r">補正後㎡単価</th><th>事例補正%</th><th>メモ</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+  <button class="sm no-print" id="addRow" style="margin-top:8px">＋ 事例追加</button></div>
+  <div class="grid2"><div class="card"><b>対象物件の補正</b> <span class="muted small">（事例平均と比べて有利なら＋、不利なら−）</span>
+  <div class="fields" style="margin-top:8px">${numIn('appr.area','専有面積','㎡',hasCase()&&c.area?`案件登録値：${c.area}㎡`:'')}${numIn('appr.floor','階数補正','%')}${numIn('appr.dir','方角補正','%')}${numIn('appr.view','眺望補正','%')}${numIn('appr.plan','間取り補正','%')}${numIn('appr.age','築年・状態補正','%')}${numIn('appr.safePct','安全掛目','%','標準は5%')}</div></div>
+  <div class="card result"><b>査定結果</b><div id="apprOut"></div></div></div>`;
+};
+F[6]=()=>{
+  const c=ctx(); (c.appr.rows||[]).forEach((r,i)=>{ const el=document.getElementById('u'+i); if(el) el.textContent = num(r.price)>0&&num(r.area)>0 ? man(r.price/r.area*(1+num(r.adj)/100),2)+'/㎡' : '—'; });
+  const r=calcComps(c); const o=document.getElementById('apprOut');
+  if(!r){ o.innerHTML='<div class="empty">成約事例（価格・面積）を入力してください。</div>'; return; }
+  if(!r.area){ o.innerHTML='<div class="empty">対象物件の専有面積を入力してください。</div>'; return; }
+  o.innerHTML=`<div class="kv" style="margin-top:8px"><span class="k">事例数</span><span class="v">${r.n}件</span><span class="k">平均㎡単価（補正後）</span><span class="v">${man(r.avg,2)}/㎡</span><span class="k">対象補正 合計</span><span class="v">${r.adj>0?'+':''}${r.adj}%</span><span class="k">標準査定価格</span><span class="v">${man(r.base,0)}</span><hr><span class="k"><b>安全な再販予測価格</b></span><span class="v"><b style="font-size:20px">${man(r.safe,0)}</b></span></div>
+  <button class="pri no-print" id="toSim" style="margin-top:10px">⑪シミュレーターの想定再販価格に反映</button>`;
+  document.getElementById('toSim').onclick=()=>{ sim(c).resale=Math.floor(r.safe); save(); toast('想定再販価格に反映しました'); location.hash='#/11'; };
+};
+AFTER[6]=m=>{
+  m.querySelector('#addRow').onclick=()=>{ctx().appr.rows.push({});save();rerender();};
+  m.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ctx().appr.rows.splice(+b.dataset.rm,1);save();rerender();});
+};
+
+/* ⑦⑧ チェックリスト共通 */
+function checklist(key,groups,labels){
+  const c=ctx(); c[key]=c[key]||{st:{},memo:{}};
+  return Object.entries(groups).map(([g,items])=>`<div class="card"><b>${g}</b>${items.map((it,i)=>{const id=g+'_'+i;return `<div class="check-item"><span>${esc(it)}</span><span class="tri" data-tri="${key}.st.${id}"><button data-v="ok" class="ok">${labels[0]}</button><button data-v="fix" class="fix">${labels[1]}</button><button data-v="ng" class="ng">${labels[2]}</button></span><input class="memo" data-k="${key}.memo.${id}" placeholder="メモ（状況・写真番号・費用感など）"></div>`;}).join('')}</div>`).join('');
+}
+function checkSummary(key,groups,labels){
+  const st=(ctx()[key]||{}).st||{}; let n=0; Object.values(groups).forEach(a=>n+=a.length);
+  const v=Object.values(st); const ok=v.filter(x=>x==='ok').length,fx=v.filter(x=>x==='fix').length,ng=v.filter(x=>x==='ng').length;
+  return `<div class="card row" style="gap:14px"><span>進捗 <b>${ok+fx+ng} / ${n}</b></span><span class="badge b-ok">${labels[0]} ${ok}</span><span class="badge b-warn">${labels[1]} ${fx}</span><span class="badge b-ng">${labels[2]} ${ng}</span>${ng?'<span class="small" style="color:var(--ng)">重大懸念あり → ⑳でNO-GO候補</span>':''}</div>`;
+}
+R[7]=()=>`<p class="lead">専有部の不具合（雨漏り・水回り）や共用部の管理状態を点検します。「要修繕」は ${link(10)} の工事項目へ、「重大懸念」は ${link(20)} の判定に反映されます。</p>${caseBanner()}${checkSummary('site',SITE_ITEMS,['良好','要修繕','重大懸念'])}${checklist('site',SITE_ITEMS,['良好','要修繕','重大懸念'])}`;
+R[8]=()=>`<p class="lead">重要事項調査報告書の滞納有無や修繕積立金の積立状況、管理規約の制限事項を確認します。「重大懸念」は ${link(20)} の管理評価でNO-GO候補になります。</p>${caseBanner()}${checkSummary('mgmt',MGMT_ITEMS,['問題なし','要確認','重大懸念'])}
+<div class="notice warn small">重大懸念の例：全体の滞納額が大きい／修繕積立金が著しく不足し一時金徴収予定／自主管理で総会が機能していない／旧耐震で耐震診断未実施　等</div>${checklist('mgmt',MGMT_ITEMS,['問題なし','要確認','重大懸念'])}`;
+
+/* ⑨ 出口・賃貸需要 */
+R[9]=()=>{
+  return `<p class="lead">実需（エンドユーザー）への売却に加え、万が一の賃貸運用時の利回り・賃料相場を算出し、投資用としての出口も担保できるか確認します。</p>${caseBanner()}
+  <div class="grid2"><div class="card"><b>賃貸条件</b><div class="fields" style="margin-top:8px">
+  ${numIn('rent.rent','想定月額賃料','万円','周辺の募集・成約賃料から')}${numIn('rent.cost','管理費・修繕積立金','万円/月')}${numIn('rent.vac','空室・賃料下落率','%','目安 5〜10%')}${numIn('rent.tax','固定資産税・保険等','万円/年')}${numIn('rent.target','投資家の期待表面利回り','%','エリアの相場')}</div>
+  <label class="f" style="margin-top:10px">賃料相場の根拠<textarea data-k="rent.memo" placeholder="ポータル募集事例・管理会社ヒアリングなど"></textarea></label></div>
+  <div class="card result"><b>出口評価</b><div id="rentOut"></div></div></div>`;
+};
+F[9]=()=>{
+  const c=ctx(); const r=c.rent||{}; const s=sim(c); const R0=num(s.resale); const lim=calcLimit(s);
+  const y=num(r.rent)*12; const net=y*(1-num(r.vac)/100)-num(r.cost)*12-num(r.tax);
+  const inv=num(r.target)>0?y/(num(r.target)/100):null;
+  const o=document.getElementById('rentOut');
+  if(!y){ o.innerHTML='<div class="empty">想定月額賃料を入力してください。</div>'; return; }
+  let verdict='';
+  if(inv && lim){ verdict = inv>=lim.limit ? `<div class="notice small" style="margin-top:10px">投資用価格（${man(inv,0)}）が買取上限価格（${man(lim.limit,0)}）以上のため、<b>賃貸出口でも元本を担保できます</b>。</div>` : `<div class="notice warn small" style="margin-top:10px">投資用価格が買取上限価格を下回ります（差額 ${man(lim.limit-inv,0)}）。実需売却が前提の案件です。</div>`; }
+  o.innerHTML=`<div class="kv" style="margin-top:8px"><span class="k">年間賃料収入</span><span class="v">${man(y)}</span><span class="k">年間純収益（NOI）</span><span class="v">${man(net)}</span>
+  <span class="k">再販価格ベース 表面利回り</span><span class="v">${R0?pct(y/R0,2):'—'}</span><span class="k">再販価格ベース 実質利回り</span><span class="v">${R0?pct(net/R0,2):'—'}</span>
+  ${lim?`<span class="k">買取上限ベース 表面利回り</span><span class="v">${pct(y/lim.limit,2)}</span>`:''}<hr>
+  <span class="k"><b>投資用としての売却想定価格</b></span><span class="v"><b>${inv?man(inv,0):'—'}</b></span></div>${verdict}`;
+};
+
+/* ⑩ リフォーム査定 */
+R[10]=()=>{
+  const c=ctx(); c.reform=c.reform||{qty:{},extra:[]};
+  const rows=REFORM_ITEMS.map(([k,n,u])=>`<tr><td>${n}</td><td><span class="unit"><input type="number" step="any" data-g="unit.${k}" style="width:90px" placeholder="${REFORM_ITEMS.find(x=>x[0]===k)[3]}"><em>万円</em></span></td><td class="muted">/${u}</td><td><input type="number" step="any" data-k="reform.qty.${k}" style="width:80px"></td><td class="r" id="rf_${k}">—</td></tr>`).join('');
+  const ex=(c.reform.extra||[]).map((x,i)=>`<tr><td><input data-k="reform.extra.${i}.name" placeholder="工事項目"></td><td><span class="unit"><input type="number" step="any" data-k="reform.extra.${i}.price" style="width:90px"><em>万円</em></span></td><td></td><td><input type="number" step="any" data-k="reform.extra.${i}.qty" style="width:80px"></td><td class="r"><button class="sm del no-print" data-rmx="${i}">×</button></td></tr>`).join('');
+  return `<p class="lead">水回り・クロス・床・建具等の工事項目別に、最新の見積もり単価で正確なリフォーム費を算出します。単価は全案件共通で保存され、数量は案件ごとに保存されます。</p>${caseBanner()}
+  <div class="notice small">単価の初期値は目安です。必ず自社の施工業者の最新見積単価に更新してください（空欄の場合は初期値を使用）。</div>
+  <div class="card"><div class="tbl-wrap"><table><thead><tr><th>工事項目</th><th>単価</th><th></th><th>数量</th><th class="r">金額</th></tr></thead><tbody>${rows}${ex}</tbody></table></div>
+  <button class="sm no-print" id="addEx" style="margin-top:8px">＋ その他工事を追加</button></div>
+  <div class="grid2"><div class="card"><div class="fields">${numIn('reform.miscPct','諸経費率','%','初期値 8%')}${numIn('reform.contPct','予備費率','%','初期値 5%')}</div>
+  <label class="f" style="margin-top:10px">見積メモ（業者名・見積日など）<textarea data-k="reform.memo"></textarea></label></div>
+  <div class="card result"><b>リフォーム費</b><div id="rfOut"></div></div></div>`;
+};
+F[10]=()=>{
+  const c=ctx(); const q=(c.reform||{}).qty||{};
+  REFORM_ITEMS.forEach(([k])=>{ const el=document.getElementById('rf_'+k); const v=num(q[k])*unitPrice(k); el.textContent=v?man(v):'—'; });
+  const r=calcReform(c);
+  document.getElementById('rfOut').innerHTML=`<div class="kv" style="margin-top:8px"><span class="k">工事小計</span><span class="v">${man(r.sub)}</span><span class="k">諸経費</span><span class="v">${man(r.misc)}</span><span class="k">予備費</span><span class="v">${man(r.cont)}</span><hr><span class="k"><b>合計（税込想定）</b></span><span class="v"><b style="font-size:20px">${man(r.total,0)}</b></span></div><button class="pri no-print" id="rfToSim" style="margin-top:10px">⑪シミュレーターのリフォーム費に反映</button>`;
+  document.getElementById('rfToSim').onclick=()=>{ sim(c).reform=Math.ceil(r.total); save(); toast('リフォーム費に反映しました'); location.hash='#/11'; };
+};
+AFTER[10]=m=>{
+  m.querySelector('#addEx').onclick=()=>{const r=ctx().reform; r.extra=r.extra||[]; r.extra.push({qty:1}); save(); rerender();};
+  m.querySelectorAll('[data-rmx]').forEach(b=>b.onclick=()=>{ctx().reform.extra.splice(+b.dataset.rmx,1);save();rerender();});
+};
+
+/* ⑪ 買取価格シミュレーター */
+const COLORS={P:'var(--accent)',reform:'#8a6dd1',acq:'#3aa0a8',hold:'#c98b2a',sales:'#d0607a',buffer:'#8d99a8',target:'var(--ok)'};
+R[11]=()=>{
+  sim();
+  return `<p class="lead">「この物件、結局いくらで買えばいい？」に答えるシートです。新人でも「この価格以下なら買える」と判断できるよう、次の式を徹底します。</p>${caseBanner()}
+  <div class="formula">想定再販価格 − リフォーム費 − 取得費 − 保有費 − 販売費 − 安全余裕 − 目標利益 ＝ <b>買取上限価格</b></div>
+  <div class="grid2" style="margin-top:14px"><div>
+  <div class="card"><b>想定再販価格・リフォーム費</b><div class="fields" style="margin-top:8px">${numIn('sim.resale','想定再販価格','万円','周辺成約事例に基づく安全な販売予測価格')}${numIn('sim.reform','リフォーム費','万円','現地調査に基づく工事見積額')}${numIn('ask','売出価格（参考）','万円','指値の算出に使用')}</div>
+  <div class="row small" style="margin-top:6px"><a href="#/6">⑥一次査定から反映</a><a href="#/10">⑩リフォーム査定から反映</a></div></div>
+  <div class="card"><b>取得費</b><div class="fields" style="margin-top:8px">${numIn('sim.regFee','登録免許税・司法書士','万円')}${numIn('sim.acqTax','不動産取得税','万円','買取再販の軽減措置を確認')}</div>
+  <label class="cb" style="margin-top:8px"><input type="checkbox" data-k="sim.buyBroker" checked><span>仕入れ時の仲介手数料あり（買取価格から自動計算）</span></label></div>
+  <div class="card"><b>保有費</b><div class="fields" style="margin-top:8px">${numIn('sim.months','保有期間','ヶ月','仕入決済〜売却決済')}${numIn('sim.mgmtMonthly','管理費＋修繕積立金','万円/月')}${numIn('sim.propTaxYear','固定資産税・都市計画税','万円/年')}${numIn('sim.otherHold','光熱費・保険・その他','万円')}${numIn('sim.loanPct','借入比率','%')}${numIn('sim.rate','借入金利','%/年')}</div></div>
+  <div class="card"><b>販売費</b><div class="fields" style="margin-top:8px">${numIn('sim.ad','広告宣伝費・図面・撮影','万円')}</div>
+  <label class="cb" style="margin-top:8px"><input type="checkbox" data-k="sim.sellBroker" checked><span>売却時の仲介手数料あり（再販価格から自動計算）</span></label></div>
+  <div class="card"><b>安全余裕・目標利益</b><div class="fields" style="margin-top:8px">${numIn('sim.bufferPct','安全余裕','%','再販価格に対する割合')}${numIn('sim.profitPct','目標利益率','%','再販価格に対する割合')}${numIn('sim.profitMin','最低確保利益','万円','率との大きい方を採用')}</div></div>
+  </div><div><div class="card result" style="position:sticky;top:70px" id="simOut"></div></div></div>`;
+};
+F[11]=()=>{
+  const c=ctx(); const s=sim(c); const r=calcLimit(s); const o=document.getElementById('simOut');
+  if(!r){ o.innerHTML='<b>買取上限価格</b><div class="empty">想定再販価格を入力してください。</div>'; return; }
+  const ask=num(c.ask);
+  const parts=[['P','買取上限',Math.max(r.limit,0)],['reform','リフォーム',r.reform],['acq','取得費',r.acq],['hold','保有費',r.hold],['sales','販売費',r.sales],['buffer','安全余裕',r.buffer],['target','目標利益',r.target]];
+  const bar=parts.map(([k,,v])=>`<div style="width:${Math.max(v,0)/r.R*100}%;background:${COLORS[k]}"></div>`).join('');
+  const leg=parts.map(([k,n])=>`<span><i style="background:${COLORS[k]}"></i>${n}</span>`).join('');
+  let askHtml='';
+  if(ask>0){
+    const a=costsAt(s,ask); const diff=ask-r.limit;
+    askHtml = diff<=0 ? `<div class="notice small" style="margin-top:10px">売出価格 ${man(ask,0)} は上限以内です（余裕 ${man(-diff,0)}）。売出価格で買った場合の見込利益 <b>${man(a.profit,0)}</b>。</div>`
+      : `<div class="notice warn small" style="margin-top:10px">売出価格 ${man(ask,0)} は上限を <b>${man(diff,0)}</b> 超過。必要な指値率 <b>${pct(diff/ask)}</b>。売出価格のままの見込利益は ${man(a.profit,0)}（目標 ${man(r.target,0)}）。</div>`;
+  }
+  const sens=[0,-0.05,-0.10].map(d=>{const R2=r.R*(1+d); const x=costsAt(s,r.limit,R2); return `<tr><td>${d===0?'想定どおり':'再販 '+(d*100)+'%'}</td><td class="r">${man(R2,0)}</td><td class="r" style="color:${x.profit<0?'var(--ng)':x.profit<r.target?'var(--warn)':'var(--ok)'}">${man(x.profit,0)}</td><td class="r">${pct(x.profit/x.invest)}</td></tr>`;}).join('');
+  o.innerHTML=`<div class="muted small">この価格以下なら買える</div><b>買取上限価格</b>
+  <div class="big" style="color:${r.limit>0?'var(--accent)':'var(--ng)'}">${man(r.limit,0)}</div>
+  ${r.limit<=0?'<div class="notice warn small">費用と目標利益が再販価格を上回っています。この条件では買えません。</div>':''}
+  <div class="stack">${bar}</div><div class="legend">${leg}</div>
+  <div class="kv" style="margin-top:12px"><span class="k">想定再販価格</span><span class="v">${man(r.R)}</span>
+  <span class="k minus">リフォーム費</span><span class="v">${man(r.reform)}</span>
+  <span class="k minus">取得費</span><span class="v">${man(r.acq)}</span>
+  <span class="k minus">保有費 <span class="small">(うち金利 ${man(r.interest)})</span></span><span class="v">${man(r.hold)}</span>
+  <span class="k minus">販売費</span><span class="v">${man(r.sales)}</span>
+  <span class="k minus">安全余裕</span><span class="v">${man(r.buffer)}</span>
+  <span class="k minus">目標利益</span><span class="v">${man(r.target)}</span><hr>
+  <span class="k"><b>＝ 買取上限価格</b></span><span class="v"><b>${man(r.limit)}</b></span></div>
+  <div class="kv small" style="margin-top:10px"><span class="k">総投資額（上限で購入時）</span><span class="v">${man(r.invest,0)}</span><span class="k">見込利益（安全余裕を含む）</span><span class="v">${man(r.profit,0)}</span><span class="k">ROI（利益÷総投資額）</span><span class="v">${pct(r.profit/r.invest)}</span><span class="k">自己資金ROI</span><span class="v">${pct(r.profit/(r.invest-r.loan))}</span></div>
+  ${askHtml}
+  <h3>感応度（上限価格で購入した場合）</h3><table class="small"><thead><tr><th>シナリオ</th><th class="r">再販価格</th><th class="r">利益</th><th class="r">ROI</th></tr></thead><tbody>${sens}</tbody></table>
+  <div class="row no-print" style="margin-top:12px"><a class="btn" href="#/12">⑫ 買付・価格交渉へ</a><a class="btn" href="#/20">⑳ 判定へ</a></div>`;
+};
+
+/* ⑫ 買付・価格交渉 */
+R[12]=()=>{
+  const c=ctx(); const r=calcLimit(sim(c)); c.offer=c.offer||{};
+  if(!c.offer.price && r && r.limit>0) c.offer.price=Math.floor(r.limit/10)*10;
+  const pts=NEGO_POINTS.map((p,i)=>`<label class="cb"><input type="checkbox" data-k="offer.pts.${i}"><span>${p}</span></label>`).join('');
+  return `<p class="lead">算出した買取上限価格をベースに、売主側の売却事情や競合状況を考慮しながら、根拠のある指値を含めた買付証明書をスピーディーに提出します。</p>${caseBanner()}
+  <div class="grid2 no-print"><div class="card"><b>指値の設計</b><div class="fields" style="margin-top:8px">${numIn('ask','売出価格','万円')}${numIn('offer.price','買付提示価格','万円',r?`上限 ${man(r.limit,0)}`:'⑪で上限を算出してください')}${numIn('offer.deposit','手付金','万円')}${txtIn('offer.settle','決済時期','契約後1ヶ月以内')}${txtIn('offer.expire','有効期限','','date')}${txtIn('offer.to','宛先（売主・仲介会社）','〇〇不動産 御中')}</div>
+  <div id="offerOut" style="margin-top:10px"></div></div>
+  <div class="card"><b>交渉材料（指値の根拠）</b><div style="margin-top:6px">${pts}</div>
+  <label class="f" style="margin-top:8px">売主の売却事情<textarea data-k="offer.seller" placeholder="相続・住替え・資金繰り・売却期限など"></textarea></label>
+  <label class="f" style="margin-top:8px">競合状況<textarea data-k="offer.comp" placeholder="他社の買付有無・内見数など"></textarea></label>
+  <label class="f" style="margin-top:8px">その他条件<textarea data-k="offer.cond" placeholder="現況有姿・契約不適合責任免責・融資特約なし・残置物は売主負担 など"></textarea></label></div></div>
+  <div class="row no-print" style="margin:4px 0 10px"><b>買付証明書（下書き）</b><button id="printOffer">印刷</button></div><div id="offerDoc"></div>`;
+};
+F[12]=()=>{
+  const c=ctx(); const o=c.offer||{}; const r=calcLimit(sim(c)); const ask=num(c.ask); const p=num(o.price);
+  let h='';
+  if(p&&ask) h+=`<div class="kv"><span class="k">指値額</span><span class="v">${man(ask-p,0)}</span><span class="k">指値率</span><span class="v">${pct((ask-p)/ask)}</span></div>`;
+  if(p&&r) h+= p<=r.limit?`<div class="notice small" style="margin-top:8px">提示価格は買取上限以内です。見込利益 ${man(costsAt(sim(c),p).profit,0)}</div>`:`<div class="notice warn small" style="margin-top:8px">提示価格が買取上限を ${man(p-r.limit,0)} 超えています。上長の承認なく提示しないでください。</div>`;
+  document.getElementById('offerOut').innerHTML=h;
+  const pts=NEGO_POINTS.filter((_,i)=>(o.pts||{})[i]);
+  document.getElementById('offerDoc').innerHTML=`<div class="doc"><div style="text-align:right">${today()}</div><h3>買付証明書</h3><p>${esc(o.to||'＿＿＿＿＿＿＿＿ 御中')}</p><p>下記不動産を、下記条件にて購入することを証明いたします。</p>
+  <table><tbody><tr><th>物件名</th><td>${esc(c.name||'')}</td></tr><tr><th>所在地</th><td>${esc(c.addr||'')}</td></tr><tr><th>専有面積</th><td>${c.area?esc(c.area)+'㎡':''}</td></tr>
+  <tr><th>購入価格</th><td><b>金 ${p?Math.round(p).toLocaleString('ja-JP'):'＿＿＿＿'} 万円</b></td></tr><tr><th>手付金</th><td>${o.deposit?'金 '+num(o.deposit).toLocaleString('ja-JP')+' 万円':''}</td></tr>
+  <tr><th>決済時期</th><td>${esc(o.settle||'')}</td></tr><tr><th>その他条件</th><td style="white-space:pre-wrap">${esc(o.cond||'')}</td></tr><tr><th>有効期限</th><td>${esc(o.expire||'')}</td></tr></tbody></table>
+  ${pts.length?`<p class="small">【価格の根拠】${pts.map(esc).join('／')}</p>`:''}<p style="text-align:right;margin-top:24px">買主　＿＿＿＿＿＿＿＿＿＿＿＿　印</p></div>`;
+};
+AFTER[12]=m=>{ m.querySelector('#printOffer').onclick=()=>window.print(); };
+
+/* ⑬ 仕入れ決裁 */
+function concerns(key,groups){
+  const d=ctx()[key]||{}; const st=d.st||{}; const memo=d.memo||{}; const out=[];
+  Object.entries(groups).forEach(([g,items])=>items.forEach((it,i)=>{const id=g+'_'+i; if(st[id]==='fix'||st[id]==='ng') out.push(`<li><span class="badge ${st[id]==='ng'?'b-ng':'b-warn'}">${st[id]==='ng'?'重大':'要対応'}</span> ${esc(it)}${memo[id]?'：'+esc(memo[id]):''}</li>`);}));
+  return out.length?`<ul style="margin:0;padding-left:18px">${out.join('')}</ul>`:'特記事項なし';
+}
+R[13]=()=>{
+  const c=ctx(); const s=sim(c); const r=calcLimit(s); const p=num((c.offer||{}).price)||num(c.ask); const a=p&&r?costsAt(s,p):null;
+  const rent=c.rent||{}; const y=num(rent.rent)*12; const res=judgeResult(c.judge);
+  return `<p class="lead">シミュレーター結果、現地調査報告、管理資料の懸念点、販売戦略をセットにした決裁書を作成し、社内承認を得ます。各シートの入力内容から自動作成されます。</p>${caseBanner()}
+  <div class="card no-print"><label class="f">販売戦略（ターゲット・販売価格・販売期間・リフォームのコンセプト）<textarea data-k="approval.strategy" data-re></textarea></label>
+  <label class="f" style="margin-top:8px">起案者コメント・リスクと対策<textarea data-k="approval.comment" data-re></textarea></label>
+  <div class="row" style="margin-top:8px"><button id="printAp">決裁書を印刷</button></div></div>
+  <div class="doc"><div style="text-align:right">起案日 ${today()}</div><h3>仕入れ決裁書</h3>
+  <table><tbody>
+  <tr><th>物件名／種別</th><td>${esc(c.name||'')}　${esc(c.type||'')}</td></tr><tr><th>所在地</th><td>${esc(c.addr||'')}</td></tr>
+  <tr><th>構造・築年／面積・間取り</th><td>${esc(c.struct||'')} ${c.built?esc(c.built)+'年築':''}／${c.area?esc(c.area)+'㎡':''} ${esc(c.plan||'')}</td></tr>
+  <tr><th>売出価格／買付価格</th><td>${man(num(c.ask)||null,0)}／<b>${man(num((c.offer||{}).price)||null,0)}</b></td></tr>
+  <tr><th>想定再販価格</th><td>${man(num(s.resale)||null,0)}</td></tr>
+  <tr><th>買取上限価格</th><td>${r?man(r.limit,0):'—'}</td></tr>
+  <tr><th>収支（買付価格ベース）</th><td>${a?`リフォーム ${man(a.reform,0)}／取得費 ${man(a.acq,0)}／保有費 ${man(a.hold,0)}／販売費 ${man(a.sales,0)}<br>総投資額 ${man(a.invest,0)}　<b>見込利益 ${man(a.profit,0)}（ROI ${pct(a.profit/a.invest)}）</b>`:'—'}</td></tr>
+  <tr><th>出口（賃貸）</th><td>${y?`想定賃料 月${man(num(rent.rent))}／再販価格ベース表面利回り ${s.resale?pct(y/num(s.resale),2):'—'}`:'—'}</td></tr>
+  <tr><th>現地調査の懸念点</th><td>${concerns('site',SITE_ITEMS)}</td></tr>
+  <tr><th>管理資料の懸念点</th><td>${concerns('mgmt',MGMT_ITEMS)}</td></tr>
+  <tr><th>販売戦略</th><td style="white-space:pre-wrap">${esc((c.approval||{}).strategy||'')}</td></tr>
+  <tr><th>起案者コメント</th><td style="white-space:pre-wrap">${esc((c.approval||{}).comment||'')}</td></tr>
+  <tr><th>判定</th><td>${judgeBadge(res)}</td></tr></tbody></table>
+  <div class="stamp"><div>起案<span></span></div><div>課長<span></span></div><div>部長<span></span></div><div>決裁<span></span></div></div></div>`;
+};
+AFTER[13]=m=>{ m.querySelector('#printAp').onclick=()=>window.print(); };
+
+/* ⑭⑮ 工程管理共通 */
+function steps(key,list){
+  const c=ctx(); c[key]=c[key]||{}; const d=c[key].steps||{}; const done=list.filter((_,i)=>(d[i]||{}).done).length;
+  return `<div class="card"><div class="row" style="justify-content:space-between"><b>進捗</b><span class="badge ${done===list.length?'b-ok':'b-acc'}">${done} / ${list.length}</span></div><div class="prog" style="margin:8px 0"><div class="${done===list.length?'done':''}" style="width:${done/list.length*100}%"></div></div>
+  <div class="tbl-wrap"><table><thead><tr><th>完了</th><th>工程</th><th>予定日</th><th>実施日</th><th>担当・メモ</th></tr></thead><tbody>${list.map((s,i)=>{const x=d[i]||{}; const late=!x.done&&x.plan&&x.plan<today(); return `<tr><td><input type="checkbox" data-k="${key}.steps.${i}.done" data-re></td><td>${s}${late?' <span class="badge b-ng">遅延</span>':''}</td><td><input type="date" data-k="${key}.steps.${i}.plan" data-re></td><td><input type="date" data-k="${key}.steps.${i}.date"></td><td><input data-k="${key}.steps.${i}.memo" style="width:100%"></td></tr>`;}).join('')}</tbody></table></div></div>`;
+}
+R[14]=()=>`<p class="lead">施工業者との打ち合わせ、リフォーム工事の進捗管理、完成後のハウスクリーニング、ステージングによる見栄え向上を管理します。予定日を過ぎた未完了工程は「遅延」と表示されます。</p>${caseBanner()}${steps('prod',PROD_STEPS)}
+<div class="card"><div class="fields">${txtIn('prod.contractor','施工業者')}${numIn('prod.cost','発注金額','万円')}${txtIn('prod.start','着工日','','date')}${txtIn('prod.end','完工予定日','','date')}</div><label class="f" style="margin-top:8px">変更・追加工事の記録<textarea data-k="prod.memo"></textarea></label></div>`;
+R[15]=()=>{
+  const c=ctx(); c.sales=c.sales||{}; const log=c.sales.log||[];
+  return `<p class="lead">販売用図面の作成、媒介会社への積極的な情報提供、オープンルームの実施、購入申込の受付と条件調整を行います。</p>${caseBanner()}
+  <div class="card"><div class="fields">${numIn('sales.price','販売価格','万円',num(sim(c).resale)?`想定再販 ${man(num(sim(c).resale),0)}`:'')}${txtIn('sales.start','販売開始日','','date')}${txtIn('sales.portal','掲載ポータル')}</div><div id="salesOut" class="small" style="margin-top:8px"></div></div>
+  ${steps('sales',SALES_STEPS)}
+  <div class="card"><div class="row" style="justify-content:space-between"><b>反響・内見ログ</b><span class="muted small">反響 ${log.length} 件／内見 ${log.filter(x=>x.kind==='内見').length} 件／申込 ${log.filter(x=>x.kind==='申込').length} 件</span></div>
+  <div class="row no-print" style="margin:8px 0"><input type="date" id="lgDate" value="${today()}"><select id="lgKind"><option>問合せ</option><option>内見</option><option>オープンルーム</option><option>申込</option><option>価格相談</option></select><input id="lgMemo" placeholder="内容（媒介会社・顧客属性・反応）" style="flex:1;min-width:160px"><button id="lgAdd" class="pri">追加</button></div>
+  ${log.length?`<table><tbody>${log.map((x,i)=>`<tr><td>${esc(x.date)}</td><td><span class="badge">${esc(x.kind)}</span></td><td>${esc(x.memo)}</td><td class="no-print"><button class="sm del" data-rml="${i}">×</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">反響はまだありません。</div>'}</div>`;
+};
+F[15]=()=>{
+  const c=ctx(); const s=c.sales||{}; const ds=daysSince(s.start); const o=document.getElementById('salesOut');
+  o.innerHTML = s.start ? `販売開始から <b>${ds}日</b> 経過${ds>=60?'　<span class="badge b-warn">価格見直し検討</span>':ds>=30?'　<span class="badge b-acc">反響を点検</span>':''}${num(sim(c).months)?`（想定保有期間 ${num(sim(c).months)}ヶ月）`:''}` : '';
+};
+AFTER[15]=m=>{
+  m.querySelector('#lgAdd').onclick=()=>{const c=ctx(); c.sales.log=c.sales.log||[]; c.sales.log.unshift({date:m.querySelector('#lgDate').value,kind:m.querySelector('#lgKind').value,memo:m.querySelector('#lgMemo').value}); save(); rerender();};
+  m.querySelectorAll('[data-rml]').forEach(b=>b.onclick=()=>{ctx().sales.log.splice(+b.dataset.rml,1);save();rerender();});
+};
+
+/* ⑯ 利益確定 */
+R[16]=()=>`<p class="lead">残代金決済、売却代金の回収、諸経費の精算を行い、最終的な実質利益とROI（投資利益率）を算出して計画と比較・振り返ります。</p>${caseBanner()}
+<div class="grid2"><div class="card"><b>実績入力</b><div class="fields" style="margin-top:8px">${numIn('settle.sell','実売却価格','万円')}${numIn('settle.buy','実仕入価格','万円')}${numIn('settle.reform','実リフォーム費','万円')}${numIn('settle.acq','実取得費','万円')}${numIn('settle.hold','実保有費（金利含む）','万円')}${numIn('settle.sales','実販売費','万円')}${numIn('settle.other','その他経費','万円')}${numIn('settle.equity','自己資金','万円')}${txtIn('settle.buyDate','仕入決済日','','date')}${txtIn('settle.sellDate','売却決済日','','date')}</div>
+<label class="cb" style="margin-top:8px"><input type="checkbox" data-k="settle.collected"><span>売却代金の回収を確認済み</span></label><label class="cb"><input type="checkbox" data-k="settle.closed"><span>諸経費の精算完了</span></label></div>
+<div class="card result"><b>実質利益・ROI</b><div id="stOut"></div></div></div>
+<div class="card"><b>振り返り</b><div class="grid2" style="margin-top:8px"><label class="f">良かった点・再現したいこと<textarea data-k="settle.good"></textarea></label><label class="f">改善点・次回への教訓<textarea data-k="settle.bad"></textarea></label></div></div>`;
+F[16]=()=>{
+  const c=ctx(); const t=c.settle||{}; const o=document.getElementById('stOut');
+  if(!num(t.sell)||!num(t.buy)){ o.innerHTML='<div class="empty">実売却価格と実仕入価格を入力してください。</div>'; return; }
+  const inv=num(t.buy)+num(t.reform)+num(t.acq)+num(t.hold)+num(t.other); const cost=inv+num(t.sales); const profit=num(t.sell)-cost;
+  let days=null; if(t.buyDate&&t.sellDate) days=Math.round((new Date(t.sellDate)-new Date(t.buyDate))/86400000);
+  const roi=profit/inv; const s=sim(c); const plan=num((c.offer||{}).price)?costsAt(s,num((c.offer||{}).price)):null;
+  o.innerHTML=`<div class="big" style="color:${profit>=0?'var(--ok)':'var(--ng)'}">${man(profit,0)}</div><div class="kv" style="margin-top:8px"><span class="k">総投資額</span><span class="v">${man(inv)}</span><span class="k">総費用（販売費含む）</span><span class="v">${man(cost)}</span><span class="k">売上利益率</span><span class="v">${pct(profit/num(t.sell))}</span><span class="k">ROI（利益÷総投資額）</span><span class="v"><b>${pct(roi)}</b></span>
+  ${num(t.equity)?`<span class="k">自己資金ROI</span><span class="v">${pct(profit/num(t.equity))}</span>`:''}
+  ${days!=null?`<span class="k">保有日数</span><span class="v">${days}日</span>${days>0?`<span class="k">年換算ROI</span><span class="v">${pct(roi*365/days)}</span>`:''}`:''}</div>
+  ${plan?`<h3>計画との比較</h3><table class="small"><thead><tr><th></th><th class="r">計画</th><th class="r">実績</th><th class="r">差異</th></tr></thead><tbody>${[['再販価格',plan.R,num(t.sell)],['リフォーム費',plan.reform,num(t.reform)],['利益',plan.profit,profit]].map(([n,a,b])=>`<tr><td>${n}</td><td class="r">${man(a,0)}</td><td class="r">${man(b,0)}</td><td class="r">${b-a>=0?'+':''}${man(b-a,0)}</td></tr>`).join('')}</tbody></table>`:''}`;
+};
+
+/* ⑰ 仕入れKPI */
+R[17]=()=>{
+  const mo=S.kpiMonth||today().slice(0,7); const a=S.kpi[mo]||{};
+  const d=new Date(); const ym=today().slice(0,7); const dim=new Date(+mo.slice(0,4),+mo.slice(5,7),0).getDate();
+  const elapsed = mo===ym ? d.getDate()/dim : mo<ym ? 1 : 0;
+  const rows=KPI_ITEMS.map(([k,n])=>{const t=num(S.kpiTargets[k]); const v=num(a[k]); const r=t?v/t:0; const behind = elapsed>0 && r<elapsed*0.9;
+    return `<tr><td>${n}</td><td><span class="unit"><input type="number" data-g="kpiTargets.${k}" style="width:90px" data-re><em>件</em></span></td><td class="r"><b>${v}</b></td><td style="min-width:140px"><div class="prog"><div class="${r>=1?'done':''}" style="width:${Math.min(r,1)*100}%"></div></div><span class="small ${behind?'':'muted'}" style="${behind?'color:var(--warn)':''}">${pct(r,0)}${behind?' ペース遅れ':''}</span></td><td class="no-print" style="white-space:nowrap"><button class="sm" data-k1="${k}" data-d="-1">−1</button> <button class="sm pri" data-k1="${k}" data-d="1">＋1</button></td></tr>`;}).join('');
+  const conv=[['info','visit','訪問あたり情報提供数',false],['site','info','情報→現地調査率',true],['offer','site','現地調査→買付率',true],['deal','offer','買付→成立率',true]].map(([x,y,n,p])=>`<span class="k">${n}</span><span class="v">${num(a[y])?(p?pct(num(a[x])/num(a[y])):(num(a[x])/num(a[y])).toFixed(2)):'—'}</span>`).join('');
+  return `<p class="lead">訪問数、情報提供数、調査件数、買付数の目標と実績を追跡します。行動した都度「＋1」で記録してください。月の経過日数に対して進捗が遅れている指標は「ペース遅れ」と表示されます。</p>
+  <div class="card"><div class="row" style="margin-bottom:8px"><b>対象月</b><input type="month" id="kpiMonth" value="${mo}"><span class="muted small">月間経過 ${pct(elapsed,0)}</span></div>
+  <div class="tbl-wrap"><table><thead><tr><th>指標</th><th>月間目標</th><th class="r">実績</th><th>達成率</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>
+  <div class="card"><b>転換率</b><div class="kv" style="margin-top:8px;max-width:420px">${conv}</div></div>`;
+};
+AFTER[17]=m=>{
+  m.querySelector('#kpiMonth').onchange=e=>{S.kpiMonth=e.target.value;save();rerender();};
+  m.querySelectorAll('[data-k1]').forEach(b=>b.onclick=()=>{const mo=S.kpiMonth||today().slice(0,7); S.kpi[mo]=S.kpi[mo]||{}; const k=b.dataset.k1; S.kpi[mo][k]=Math.max(0,num(S.kpi[mo][k])+ +b.dataset.d); save(); rerender();});
+};
+
+/* ⑱ 新人用語集 */
+const GLOSS=[
+  ['レインズ（REINS）','不動産流通標準情報システム。国土交通大臣指定の不動産流通機構が運営し、宅建業者のみが物件・成約事例を閲覧できる。'],
+  ['重要事項調査報告書','マンションの管理・財務状況が記載された公式書類。管理会社が発行し、管理費等の滞納、修繕積立金総額、大規模修繕の予定などが分かる。'],
+  ['修繕積立金','大規模修繕に備えて区分所有者が毎月積み立てる費用。不足すると値上げや一時金徴収のリスクがある。'],
+  ['管理費','共用部の清掃・設備点検・管理会社への委託費などに充てる毎月の費用。'],
+  ['残置物','前所有者が室内に放置していった家具や家電などの私物。撤去費用は指値の根拠になる。'],
+  ['買取再販','自社で物件を買い取り、リフォーム等で価値を高めて再販売するビジネスモデル。'],
+  ['区分所有','マンションの一室など、建物の一部を独立して所有する形態。専有部分と共用部分の持分で構成される。'],
+  ['専有部／共用部','専有部は区分所有者が単独で所有する住戸内部。共用部はエントランス・廊下・外壁・配管の縦管など全員で共有する部分。'],
+  ['大規模修繕','外壁・屋上防水・給排水管などを周期的（12〜15年程度）に行う大掛かりな修繕工事。'],
+  ['旧耐震／新耐震','1981年6月1日以降に建築確認を受けた建物が新耐震基準。それ以前は旧耐震で、融資や税制優遇に影響する。'],
+  ['買付証明書','購入希望価格・条件を売主側に提示する書面。法的拘束力は限定的だが交渉の起点となる。'],
+  ['指値（さしね）','売出価格より低い価格を提示する価格交渉。根拠を示すことが重要。'],
+  ['手付金','売買契約時に買主が売主に支払う金銭。解約手付として扱われるのが一般的。'],
+  ['残代金決済','売買代金の残額を支払い、所有権移転登記と物件の引渡しを同時に行うこと。'],
+  ['契約不適合責任','引き渡した物件が契約内容に適合しない場合に売主が負う責任。業者売主の場合、引渡しから2年以上の期間を定める必要がある。'],
+  ['仲介手数料','媒介した宅建業者に支払う報酬。売買価格400万円超の場合の上限は「価格×3%＋6万円＋消費税」。'],
+  ['媒介契約','売却・購入の仲介を依頼する契約。一般媒介・専任媒介・専属専任媒介の3種類がある。'],
+  ['登録免許税','所有権移転登記や抵当権設定登記の際に課される国税。'],
+  ['不動産取得税','不動産を取得した際に課される都道府県税。宅建業者の買取再販には一定要件で軽減措置がある。'],
+  ['表面利回り','年間賃料収入÷物件価格。経費を考慮しない簡易指標。'],
+  ['実質利回り','（年間賃料−経費）÷物件価格。管理費・修繕積立金・税金等を差し引いた実態に近い利回り。'],
+  ['ROI（投資利益率）','利益÷投資額。投下した資金に対してどれだけ利益を得られたかを示す。'],
+  ['ステージング','販売時に家具・小物を配置し、生活イメージを伝えて見栄えを向上させる手法。'],
+  ['自主管理','管理会社に委託せず、管理組合が自ら管理を行う形態。管理の質にばらつきがあり要注意。'],
+  ['三現主義','現地・現物・現人（げんにん）を自分の目で確かめて判断する考え方。']
+];
+R[18]=()=>`<p class="lead">実務で頻出する用語を定義しています。分からない言葉が出たらまずここで確認しましょう。</p>
+<div class="card"><input id="gq" placeholder="用語を検索" style="width:100%"><dl class="gloss" id="gl"></dl></div>`;
+AFTER[18]=m=>{
+  const draw=q=>{ m.querySelector('#gl').innerHTML=GLOSS.filter(([t,d])=>!q||t.includes(q)||d.includes(q)).map(([t,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('')||'<div class="empty">該当なし</div>'; };
+  draw(''); m.querySelector('#gq').oninput=e=>draw(e.target.value.trim());
+};
+
+/* ⑲ 新人5原則 */
+const PRINC=[
+  ['報・連・相はスピード重視','特にマイナス情報は即座に共有する。悪い知らせほど早く上げることで、会社として打てる手が増える。'],
+  ['数字と根拠（エビデンス）で判断・発言する','「高そう」「売れそう」ではなく、成約事例・見積・シミュレーター結果を示して話す。'],
+  ['三現主義を徹底する','現地・現物・現人。図面や写真だけで判断せず、必ず自分の目と足で確かめる。'],
+  ['約束と期日は絶対に守る','仲介会社からの信頼が情報の量と質を決める。回答期限・買付期限を守ることが最大の営業。'],
+  ['毎日の行動量を落とさず、ルーティンを継続する','仕入れは確率のビジネス。100件のインプットがなければ1件の勝負案件は生まれない。']
+];
+R[19]=()=>`<p class="lead">迷ったときの行動指針です。</p>${PRINC.map(([t,d],i)=>`<div class="card principle"><div class="num">${i+1}</div><div><b style="font-size:15px">${t}</b><div class="muted">${d}</div></div></div>`).join('')}`;
+
+/* ⑳ GO/HOLD/NO-GO */
+const J_ITEMS=[['price','価格','買付価格（なければ売出価格）が買取上限価格以内か'],['mgmt','管理・物件状態','⑦現地確認・⑧管理資料に重大懸念がないか'],['loc','立地','駅距離・周辺環境・需要層から見て再販できる立地か'],['profit','利益','買付価格で目標利益を確保できるか']];
+const J_LABEL={OK:'クリア',HOLD:'要交渉・要調査',NG:'NG'};
+R[20]=()=>{
+  const c=ctx(); c.judge=c.judge||{}; const au=judgeAuto(c);
+  const rows=J_ITEMS.map(([k,n,d])=>`<div class="check-item"><div><b>${n}</b><div class="muted small">${d}${au[k]?`　<span class="badge ${au[k]==='OK'?'b-ok':au[k]==='HOLD'?'b-warn':'b-ng'}">自動：${J_LABEL[au[k]]}</span>`:''}</div></div>
+  <select data-k="judge.${k}" data-re><option value="">未評価</option><option value="OK">クリア</option><option value="HOLD">要交渉・要調査</option><option value="NG">NG</option></select></div>`).join('');
+  const res=judgeResult(c.judge); if(c.judge.result!==res){ c.judge.result=res; save(); }
+  const cls=res==='GO'?'v-GO':res==='HOLD'?'v-HOLD':res==='NO-GO'?'v-NOGO':'v-none';
+  const msg={GO:'すべての条件がクリア。すぐに⑫買付に進みます。',HOLD:'交渉余地あり。追加調査や指値の可能性を探ります。','NO-GO':'重大な懸念または利益不足。見送ります。','':'全項目を評価すると判定が表示されます。'}[res];
+  return `<p class="lead">価格・管理・立地・利益の4条件で最終判断します。1つでもNGならNO-GO、要交渉が含まれればHOLD、すべてクリアでGOです。</p>${caseBanner()}
+  <div class="grid2"><div class="card">${rows}<div class="row no-print" style="margin-top:10px"><button id="applyAuto">自動評価を反映</button><span class="muted small">自動評価は⑪⑫⑦⑧の入力から算出（立地は手動）</span></div>
+  <label class="f" style="margin-top:10px">判定理由・追加調査事項<textarea data-k="judge.note"></textarea></label></div>
+  <div><div class="verdict ${cls}">${res||'未判定'}</div><div class="card" style="margin-top:12px">${msg}</div>
+  <div class="card small"><b>判定基準</b><table style="margin-top:6px"><tbody>
+  <tr><td>${judgeBadge('GO')}</td><td>すべての条件（価格・管理・立地・利益）がクリアし、すぐに買付に進む案件</td></tr>
+  <tr><td>${judgeBadge('HOLD')}</td><td>価格や条件の交渉余地があり、追加調査や指値の可能性を探る保留案件</td></tr>
+  <tr><td>${judgeBadge('NO-GO')}</td><td>管理体制に重大な懸念がある、あるいは利益が確保できない見送り案件</td></tr></tbody></table></div></div></div>`;
+};
+AFTER[20]=m=>{ m.querySelector('#applyAuto').onclick=()=>{ const c=ctx(); Object.assign(c.judge,judgeAuto(c)); save(); rerender(); toast('自動評価を反映しました'); }; };
+
+/* ㉑ 使い方 */
+R[21]=()=>`<p class="lead">本マニュアルの項目に沿って日々の業務および案件の精査を行い、迷った際は ${link(11)} と ${link(20)} に立ち返ることで、誰でもブレのない仕入れ判断を行うことができます。</p>
+<div class="card"><h3 style="margin-top:0">毎日の使い方</h3><ol>
+<li>朝、${link(2)} を開き、ルーティンに沿って行動する。</li>
+<li>受け取った物件情報はすべて ${link(4)} に登録する（取りこぼし防止）。接触した仲介会社は ${link(3)} で「本日接触」を押す。</li>
+<li>訪問・架電・買付などの行動は都度 ${link(17)} で「＋1」する。</li>
+<li>夕方に日報を書き、${link(5)} で歩留まりを確認する。</li></ol></div>
+<div class="card"><h3 style="margin-top:0">1案件の進め方</h3><ol>
+<li>${link(4)} で案件を選択（上部の「対象案件」でも切替可）。以降の入力はすべてこの案件に保存される。</li>
+<li>${link(6)} で成約事例から安全な再販価格を出し、シミュレーターへ反映。</li>
+<li>${link(7)}・${link(8)} を記入。重大懸念があればこの時点で上長に共有。</li>
+<li>${link(9)} で賃貸出口を確認、${link(10)} でリフォーム費を出しシミュレーターへ反映。</li>
+<li>${link(11)} で買取上限価格を確認 → ${link(20)} で判定。</li>
+<li>GOなら ${link(12)} で買付証明書を作成・提出し、${link(13)} を印刷して決裁を取る。</li>
+<li>仕入れ後は ${link(14)} → ${link(15)} → ${link(16)} の順に進め、最後に振り返りを書く。</li></ol></div>
+<div class="card"><h3 style="margin-top:0">データの保存について</h3>
+<p>入力内容はこのブラウザ内（localStorage）に自動保存されます。別のブラウザ・端末とは共有されません。ブラウザのデータ削除で消えるため、定期的に上部の「バックアップ」でJSONファイルを保存してください。「復元」で読み込むと現在のデータは置き換わります。</p>
+<button class="del no-print" id="resetAll">全データを初期化</button></div>`;
+AFTER[21]=m=>{ m.querySelector('#resetAll').onclick=()=>{ if(confirm('全データを削除します。先にバックアップを取ることをおすすめします。よろしいですか？')){ S=defaultState(); save(); rerender(); toast('初期化しました'); } }; };
+
+/* ========== ダイアログフォーム ========== */
+function openForm(title,fields,obj,onSave,onDelete){
+  const dlg=document.getElementById('dlg'); const f=document.getElementById('dlgForm');
+  f.innerHTML=`<h3>${esc(title)}</h3><div class="fields" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))">${fields.map(([k,l,t,opts])=>{
+    const v=getP(obj,k); const val=v==null?'':v;
+    if(t==='select') return `<label class="f">${l}<select name="${k}">${opts.map(o=>{const [ov,ol]=Array.isArray(o)?o:[o,o]; return `<option value="${ov}" ${String(ov)===String(val)?'selected':''}>${esc(ol)}</option>`;}).join('')}</select></label>`;
+    if(t==='textarea') return `<label class="f" style="grid-column:1/-1">${l}<textarea name="${k}">${esc(val)}</textarea></label>`;
+    return `<label class="f">${l}<input name="${k}" type="${t||'text'}" ${t==='number'?'step="any"':''} value="${esc(val)}"></label>`;
+  }).join('')}</div><div class="dlg-actions">${onDelete?'<button type="button" class="del" id="dlgDel" style="margin-right:auto">削除</button>':''}<button value="cancel" formnovalidate>キャンセル</button><button class="pri" value="ok">保存</button></div>`;
+  if(onDelete) f.querySelector('#dlgDel').onclick=()=>{ if(confirm('削除しますか？')){ onDelete(); save(); dlg.close(); rerender(); } };
+  dlg.onclose=()=>{
+    if(dlg.returnValue!=='ok') return;
+    const o={}; fields.forEach(([k,,t])=>{ const el=f.elements[k]; o[k]= t==='number' ? (el.value===''?'':parseFloat(el.value)) : (k==='status'?+el.value:el.value); });
+    onSave(o); save(); rerender();
+  };
+  dlg.returnValue=''; dlg.showModal();
+}
+
+/* ========== 起動 ========== */
+document.getElementById('caseSel').onchange=e=>{ S.current=e.target.value; save(); rerender(); };
+document.getElementById('btnNewCase').onclick=newCase;
+document.getElementById('navSel').onchange=e=>{ location.hash='#/'+e.target.value; };
+document.getElementById('btnExport').onclick=()=>{
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(b); a.download=`買取再販データ_${today()}.json`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+document.getElementById('btnImport').onclick=()=>document.getElementById('fileImport').click();
+document.getElementById('fileImport').onchange=e=>{
+  const file=e.target.files[0]; if(!file) return; const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result); if(!Array.isArray(d.cases)) throw 0; if(confirm('現在のデータを置き換えて復元しますか？')){ S=Object.assign(defaultState(),d); save(); rerender(); toast('復元しました'); } }catch(x){ toast('読み込めないファイルです'); } e.target.value=''; };
+  r.readAsText(file);
+};
+window.addEventListener('hashchange',()=>{ render(); window.scrollTo(0,0); });
+render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
